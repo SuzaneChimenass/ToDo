@@ -4,10 +4,14 @@
     <form class="col-md-6 mx-auto" #taskForm="ngForm" (ngSubmit)="onSubmit(taskForm)">
         <div class="mb-3">
             <label for="task" class="form-label">Tarefa</label>
-            <input type="text" class="form-control" id="task" ngModel name="task" #taskInput="ngModel" required placeholder="Digite a tarefa a ser realizada">
-            <small class="text-danger">Campo Obrigatório</small>
+            <input type="text" class="form-control" id="task" 
+            ngModel name="task" #taskInput="ngModel" required 
+            placeholder="Digite a tarefa a ser realizada">
+
+            <small *ngIf="taskInput.invalid && taskInput.dirty" class="text-danger">Campo Obrigatório</small>
         </div>
-        <button type="submit" class="btn btn-primary ">
+
+        <button [disabled]="taskForm.invalid" type="submit" class="btn btn-primary ">
             Adicionar Tarefa
         </button>
     </form>
@@ -26,9 +30,11 @@
         <tbody>
           <tr *ngFor="let task of taskArray; index as i">
             <th scope="row">{{i+1}}</th>
-            <td class="w-75">{task.taskName}</td>
-            <td><input type="checkbox"> Finalizada</td>
-            <td><button class="btn btn-sm btn-danger">Excluir</button></td>
+            <td class="w-75">
+              <span [class.completed]="task.isCompleted">{{task.taskName}}</span>
+            </td>
+            <td><input type="checkbox" (change)="onCheck(i)" [checked]="task.isCompleted"> Finalizada</td>
+            <td><button class="btn btn-sm btn-danger" (click)="onDelete(i)">Excluir</button></td>
           </tr>
         </tbody>
       </table>
